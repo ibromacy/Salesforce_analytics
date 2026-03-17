@@ -3,3 +3,5 @@ dbt_internal_packages/
 logs/
 target/
 .env
+*.json
+!.vscode/extensions.json
