@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: raw_salesforce
+    database: salesforce-analytics-489817
+    schema: raw_salesforce
+    tables:
+      - name: Account
+      - name: Contact
+      - name: Lead
+      - name: Opportunity
+      - name: OpportunityStage
+      - name: Task
+      - name: User

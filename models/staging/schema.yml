@@ -1,0 +1,79 @@
+version: 2
+
+models:
+  - name: stg_accounts
+    description: Cleaned Salesforce accounts - one row per account
+    columns:
+      - name: account_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_contacts
+    description: Cleaned Salesforce contacts - one row per contact
+    columns:
+      - name: contact_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: account_id
+        description: Foreign key to stg_accounts
+        tests:
+          - relationships:
+             arguments:
+              to: ref('stg_accounts')
+              field: account_id
+
+  - name: stg_leads
+    description: Cleaned Salesforce leads - one row per lead
+    columns:
+      - name: lead_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_opportunities
+    description: Cleaned Salesforce opportunities - one row per opportunity
+    columns:
+      - name: opportunity_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: account_id
+        description: Foreign key to stg_accounts
+        tests:
+          - relationships:
+             arguments:
+              to: ref('stg_accounts')
+              field: account_id
+
+  - name: stg_opportunity_stages
+    description: Salesforce opportunity stage definitions
+    columns:
+      - name: stage_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_tasks
+    description: Cleaned Salesforce tasks - one row per task
+    columns:
+      - name: task_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_users
+    description: Cleaned Salesforce users - one row per active user
+    columns:
+      - name: user_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
