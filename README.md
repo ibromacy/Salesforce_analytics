@@ -1,5 +1,5 @@
 # 📊 SasS Revenue Analytics (Salesforce) — End-to-End Modern Data Platform
-**CRM Sales Analytics | Airbyte · BigQuery · dbt Core · Airflow · Power BI**
+**CRM Sales Analytics | Airbyte · BigQuery · dbt Core · Airflow · Looker**
 
 ---
 
@@ -73,13 +73,13 @@ This project deliberately uses BigQuery to demonstrate platform versatility alon
 
 ### Why Airbyte for Ingestion (not custom Python)
 
-The previous project (Auto_project) used Snowpipe + Streams + Tasks for ingestion and CDC — a powerful but infrastructure-heavy approach that required managing S3 event notifications, stream consumption, and task scheduling manually. For a CRM source like Salesforce, Airbyte is the better architectural choice because Salesforce's API is well-defined and Airbyte's connector handles authentication, pagination, rate limiting, schema detection, and incremental sync natively. Building this in custom Python would mean reimplementing what Airbyte already does reliably.
+Airbyte is the better architectural choice because Salesforce's API is well-defined and Airbyte's connector handles authentication, pagination, rate limiting, schema detection, and incremental sync natively. Building this in custom Python would mean reimplementing what Airbyte already does reliably.
 
 This is a deliberate trade-off: Airbyte abstracts away ingestion complexity at the cost of less granular control. For well-known SaaS sources, this trade-off is correct. For niche or internal APIs, custom Python would be the right choice.
 
 ### Why CDC Lives in Airbyte, Not dbt
 
-In the Auto_project, CDC was handled by Snowflake Streams — a native change data capture mechanism that tracked row-level changes between consumption points. In this project, Airbyte handles CDC at the ingestion layer using Salesforce's `SystemModstamp` field to identify changed records. Each incremental sync pulls only new or modified records and deduplicates on the record ID before writing to BigQuery.
+In this project, Airbyte handles CDC at the ingestion layer using Salesforce's `SystemModstamp` field to identify changed records. Each incremental sync pulls only new or modified records and deduplicates on the record ID before writing to BigQuery.
 
 This means dbt staging models don't need incremental logic — they are materialised as views that clean and rename columns on top of already-deduplicated raw tables. This is architecturally cleaner than embedding deduplication logic in dbt, and keeps the staging layer focused on column selection and naming conventions rather than data engineering plumbing.
 
@@ -104,7 +104,7 @@ The snapshot strategy uses `timestamp` on `last_modified_at` — a reliable Sale
 | Data Warehouse | BigQuery (Free Tier) | Serverless, per-query billing, native GCP integration |
 | Transformation | dbt Core 2.0 | Kimball modeling, SCD Type 2 snapshots, testing, documentation |
 | Orchestration | Apache Airflow *(planned)* | Airbyte sync trigger → dbt build → BI refresh |
-| BI | Power BI / Looker Studio *(planned)* | Stakeholder-facing dashboards |
+| BI | Looker Studio *(planned)* | Stakeholder-facing dashboards |
 | Data Observability | Elementary *(planned)* | Anomaly detection, freshness monitoring, dbt test dashboard |
 | CI | GitHub Actions *(planned)* | Automated dbt build + tests on every PR to main |
 | Version Control | Git + GitHub | Feature branch workflow, full commit history |
