@@ -1,4 +1,4 @@
-# 📊 SasS Revenue Analytics (Salesforce) — End-to-End Modern Data Platform
+# 📊 SaaS Revenue Analytics (Salesforce) — End-to-End Modern Data Platform
 **CRM Sales Analytics | Airbyte · BigQuery · dbt Core · Airflow · Looker**
 
 ---
