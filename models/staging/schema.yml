@@ -77,3 +77,48 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: stg_campaigns
+    description: Cleaned Salesforce campaigns - one row per campaign
+    columns:
+      - name: campaign_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_campaign_members
+    description: Cleaned Salesforce campaign members - one row per member
+    columns:
+      - name: campaign_member_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: campaign_id
+        description: Foreign key to stg_campaigns
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_campaigns')
+                field: campaign_id
+
+  - name: stg_opportunity_line_items
+    description: Cleaned Salesforce opportunity line items - one row per product per deal
+    columns:
+      - name: line_item_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: opportunity_id
+        description: Foreign key to stg_opportunities
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_opportunities')
+                field: opportunity_id
+      - name: total_price
+        description: Line item total (quantity x unit price)
+        tests:
+          - not_null

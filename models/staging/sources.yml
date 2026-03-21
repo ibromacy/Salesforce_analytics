@@ -10,5 +10,8 @@ sources:
       - name: Lead
       - name: Opportunity
       - name: OpportunityStage
+      - name: OpportunityLineItem
       - name: Task
       - name: User
+      - name: Campaign
+      - name: CampaignMember
