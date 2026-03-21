@@ -54,40 +54,10 @@ models:
           - unique
           - not_null
 
-  - name: fct_opportunities
-    description: Core sales pipeline fact - one row per opportunity
+  - name: dim_campaign
+    description: Marketing campaign dimension
     columns:
-      - name: opportunity_id
-        description: Primary key
-        tests:
-          - unique
-          - not_null
-      - name: amount
-        description: Deal amount in currency
-      - name: won_revenue
-        description: Revenue from won deals only
-      - name: lost_revenue
-        description: Revenue from lost deals only
-      - name: deal_status
-        description: Derived status - Won, Lost, or Open
-        tests:
-          - accepted_values:
-             arguments:
-              values: ['Won', 'Lost', 'Open']
-
-  - name: fct_lead_conversion
-    description: Lead conversion funnel - one row per lead
-    columns:
-      - name: lead_id
-        description: Primary key
-        tests:
-          - unique
-          - not_null
-
-  - name: fct_sales_activities
-    description: Sales activity tracking - one row per task
-    columns:
-      - name: task_id
+      - name: campaign_id
         description: Primary key
         tests:
           - unique

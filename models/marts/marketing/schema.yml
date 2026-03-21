@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: fct_lead_conversion
+    description: Lead conversion funnel - one row per lead
+    columns:
+      - name: lead_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: is_converted
+        description: Whether lead has converted
+        tests:
+          - not_null
+
+  - name: fct_campaign_performance
+    description: Campaign effectiveness - one row per campaign
+    columns:
+      - name: campaign_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: actual_cost
+        description: Actual campaign spend
+      - name: amount_won_opportunities
+        description: Revenue from won deals attributed to campaign
+
+  - name: fct_marketing_performance
+    description: Aggregated marketing metrics per lead source
+    columns:
+      - name: lead_source
+        description: Primary key - marketing channel
+        tests:
+          - unique
+          - not_null
+      - name: conversion_rate
+        description: Converted leads / total leads
+      - name: total_converted_revenue
+        description: Revenue from converted lead opportunities

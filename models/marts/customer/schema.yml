@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: fct_account_health
+    description: Customer health and retention signals - one row per account
+    columns:
+      - name: account_id
+        description: Primary key
+        tests:
+          - unique
+          - not_null
+      - name: health_status
+        description: Derived health classification
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Healthy', 'At Risk', 'Churning', 'No Revenue', 'Unknown']
+      - name: upsell_status
+        description: Derived upsell classification
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['Active Upsell', 'Upsell Potential', 'Explore Upsell', 'No Upsell Signal']
+      - name: lifetime_revenue
+        description: Total won revenue for this account
+        tests:
+          - not_null
