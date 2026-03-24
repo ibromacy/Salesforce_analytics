@@ -70,14 +70,13 @@ jobs:
 
       - name: Install dbt Fusion
         run: |
-          curl -fsSL https://dbt.com/install.sh | bash
-          echo "Finding dbt binary..."
-          find $HOME -name "dbt" -type f 2>/dev/null
-          find /usr -name "dbt" -type f 2>/dev/null
-          ls -la $HOME/.dbt-fusion/ 2>/dev/null || echo "No .dbt-fusion directory"
-          ls -la $HOME/.dbt-fusion/bin/ 2>/dev/null || echo "No .dbt-fusion/bin directory"
-          ls -la $HOME/.local/bin/ 2>/dev/null || echo "No .local/bin directory"
-          which dbt 2>/dev/null || echo "dbt not in PATH"
+          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Verify dbt installation
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          dbt --version
 
       - name: Authenticate with GCP
         run: |
@@ -102,12 +101,12 @@ jobs:
 
       - name: Install dbt packages
         run: |
-          export PATH="$HOME/.dbt-fusion/bin:$HOME/.local/bin:$PATH"
+          export PATH="$HOME/.local/bin:$PATH"
           dbt deps
 
       - name: Run dbt build
         run: |
-          export PATH="$HOME/.dbt-fusion/bin:$HOME/.local/bin:$PATH"
+          export PATH="$HOME/.local/bin:$PATH"
           dbt build
 
       - name: Clean up credentials
