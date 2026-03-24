@@ -1,0 +1,8 @@
+models:
+  - name: metricflow_time_spine
+    description: MetricFlow required time spine with daily granularity
+    config:
+      materialized: view
+    columns:
+      - name: ds
+        granularity: day

@@ -1,3 +1,58 @@
+# name: dbt CI
+
+# on:
+#   pull_request:
+#     branches: [main]
+
+# jobs:
+#   dbt-build:
+#     name: dbt build + test
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v4
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: '3.11'
+
+#       - name: Install dbt
+#         run: |
+#           pip install dbt-bigquery==1.9.0
+
+#       - name: Authenticate with GCP
+#         run: |
+#           echo '${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}' > /tmp/gcp_keyfile.json
+
+#       - name: Create profiles.yml
+#         run: |
+#           mkdir -p ~/.dbt
+#           cat <<EOF > ~/.dbt/profiles.yml
+#           salesforce_analytics:
+#             target: ci
+#             outputs:
+#               ci:
+#                 type: bigquery
+#                 method: service-account
+#                 project: salesforce-analytics-489817
+#                 dataset: ci_salesforce
+#                 location: EU
+#                 keyfile: /tmp/gcp_keyfile.json
+#                 threads: 4
+#           EOF
+
+#       - name: Install dbt packages
+#         run: dbt deps
+
+#       - name: Run dbt build
+#         run: dbt build
+
+#       - name: Clean up credentials
+#         if: always()
+#         run: rm -f /tmp/gcp_keyfile.json
+
 name: dbt CI
 
 on:
@@ -13,14 +68,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dbt
+      - name: Install dbt Fusion
         run: |
-          pip install dbt-bigquery==1.9.0
+          curl -fsSL https://public.cdn.getdbt.com/fs/install/install.sh | sh -s -- --update
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Verify dbt installation
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          dbt --version
 
       - name: Authenticate with GCP
         run: |
@@ -29,7 +85,7 @@ jobs:
       - name: Create profiles.yml
         run: |
           mkdir -p ~/.dbt
-          cat <<EOF > ~/.dbt/profiles.yml
+          cat > ~/.dbt/profiles.yml << 'EOF'
           salesforce_analytics:
             target: ci
             outputs:
@@ -44,10 +100,14 @@ jobs:
           EOF
 
       - name: Install dbt packages
-        run: dbt deps
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          dbt deps
 
       - name: Run dbt build
-        run: dbt build
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          dbt build
 
       - name: Clean up credentials
         if: always()

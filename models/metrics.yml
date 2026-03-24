@@ -1,0 +1,231 @@
+metrics:
+
+  # =====================
+  # SALES METRICS
+  # =====================
+
+  - name: total_revenue
+    description: Total won revenue from closed deals
+    type: simple
+    label: Total Revenue
+    type_params:
+      measure: won_revenue
+
+  - name: total_pipeline
+    description: Total value of open pipeline deals
+    type: simple
+    label: Total Pipeline
+    type_params:
+      measure: open_pipeline_value
+
+  - name: total_lost_revenue
+    description: Total revenue lost from closed-lost deals
+    type: simple
+    label: Total Lost Revenue
+    type_params:
+      measure: lost_revenue
+
+  - name: win_rate
+    description: Percentage of closed deals that were won
+    type: derived
+    label: Win Rate
+    type_params:
+      expr: won_deal_count * 1.0 / nullif(closed_deal_count, 0)
+      metrics:
+        - name: won_deal_count
+          offset_window: null
+        - name: closed_deal_count
+          offset_window: null
+
+  - name: won_deal_count
+    description: Total number of won deals
+    type: simple
+    label: Won Deals
+    type_params:
+      measure: won_deal_count
+
+  - name: closed_deal_count
+    description: Total number of closed deals
+    type: simple
+    label: Closed Deals
+    type_params:
+      measure: closed_deal_count
+
+  - name: average_deal_size
+    description: Average amount across all deals
+    type: simple
+    label: Average Deal Size
+    type_params:
+      measure: avg_deal_size
+
+  - name: average_sales_cycle
+    description: Average number of days from opportunity creation to close
+    type: simple
+    label: Average Sales Cycle (Days)
+    type_params:
+      measure: avg_days_to_close
+
+  - name: deal_count
+    description: Total number of opportunities
+    type: simple
+    label: Total Deals
+    type_params:
+      measure: opportunity_count
+
+  # =====================
+  # MARKETING METRICS
+  # =====================
+
+  - name: lead_conversion_rate
+    description: Percentage of leads that converted to opportunities
+    type: derived
+    label: Lead Conversion Rate
+    type_params:
+      expr: converted_leads * 1.0 / nullif(total_leads, 0)
+      metrics:
+        - name: converted_leads
+          offset_window: null
+        - name: total_leads
+          offset_window: null
+
+  - name: total_leads
+    description: Total number of leads
+    type: simple
+    label: Total Leads
+    type_params:
+      measure: total_leads
+
+  - name: converted_leads
+    description: Number of leads that converted
+    type: simple
+    label: Converted Leads
+    type_params:
+      measure: converted_leads
+
+  - name: average_time_to_convert
+    description: Average days from lead creation to conversion
+    type: simple
+    label: Avg Time to Convert (Days)
+    type_params:
+      measure: avg_days_to_convert
+
+  - name: converted_revenue
+    description: Total revenue from converted lead opportunities
+    type: simple
+    label: Converted Revenue
+    type_params:
+      measure: converted_opportunity_amount
+
+  - name: campaign_roi
+    description: Return on campaign investment
+    type: derived
+    label: Campaign ROI
+    type_params:
+      expr: (campaign_won_revenue - total_campaign_spend) * 1.0 / nullif(total_campaign_spend, 0)
+      metrics:
+        - name: campaign_won_revenue
+          offset_window: null
+        - name: total_campaign_spend
+          offset_window: null
+
+  - name: campaign_won_revenue
+    description: Revenue from won deals attributed to campaigns
+    type: simple
+    label: Campaign Won Revenue
+    type_params:
+      measure: campaign_won_revenue
+
+  - name: total_campaign_spend
+    description: Total actual spend across campaigns
+    type: simple
+    label: Total Campaign Spend
+    type_params:
+      measure: total_campaign_spend
+
+  - name: cost_per_member
+    description: Average cost per campaign member reached
+    type: derived
+    label: Cost Per Member
+    type_params:
+      expr: total_campaign_spend * 1.0 / nullif(total_campaign_members, 0)
+      metrics:
+        - name: total_campaign_spend
+          offset_window: null
+        - name: total_campaign_members
+          offset_window: null
+
+  - name: total_campaign_members
+    description: Total members reached across campaigns
+    type: simple
+    label: Total Campaign Members
+    type_params:
+      measure: total_campaign_members
+
+  # =====================
+  # CUSTOMER METRICS
+  # =====================
+
+  - name: total_lifetime_revenue
+    description: Total lifetime revenue across all accounts
+    type: simple
+    label: Total Lifetime Revenue
+    type_params:
+      measure: total_lifetime_revenue
+
+  - name: average_account_revenue
+    description: Average lifetime revenue per account
+    type: simple
+    label: Avg Account Revenue
+    type_params:
+      measure: avg_lifetime_revenue
+
+  - name: total_open_pipeline_by_account
+    description: Total open pipeline value across accounts
+    type: simple
+    label: Total Open Pipeline (Accounts)
+    type_params:
+      measure: total_open_pipeline
+
+  - name: account_count
+    description: Total number of accounts
+    type: simple
+    label: Total Accounts
+    type_params:
+      measure: total_accounts
+
+  # =====================
+  # ACTIVITY METRICS
+  # =====================
+
+  - name: total_activities
+    description: Total number of sales activities
+    type: simple
+    label: Total Activities
+    type_params:
+      measure: total_activities
+
+  - name: activity_completion_rate
+    description: Percentage of activities completed
+    type: derived
+    label: Activity Completion Rate
+    type_params:
+      expr: completed_activities * 1.0 / nullif(total_activities, 0)
+      metrics:
+        - name: completed_activities
+          offset_window: null
+        - name: total_activities
+          offset_window: null
+
+  - name: completed_activities
+    description: Number of completed activities
+    type: simple
+    label: Completed Activities
+    type_params:
+      measure: completed_activities
+
+  - name: average_call_duration
+    description: Average call duration in minutes
+    type: simple
+    label: Avg Call Duration (Minutes)
+    type_params:
+      measure: avg_call_duration_minutes

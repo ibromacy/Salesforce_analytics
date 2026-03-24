@@ -10,17 +10,8 @@ clean-targets:
   - "dbt_packages"
 
 seeds:
-  # Builds seeds into '<your_schema_name>_raw'
   salesforce_analytics:
     +schema: raw
-
-# models:
-#   salesforce_analytics:
-#     # Materialize staging models as views, and marts as tables
-#     staging:
-#       +materialized: view
-#     marts:
-#       +materialized: table
 
 models:
   salesforce_analytics:
@@ -40,6 +31,8 @@ models:
       dimensions:
         +materialized: table
         +schema: marts_dimensions
+        metricflow_time_spine:
+          +materialized: view
 
 snapshots:
   salesforce_analytics:

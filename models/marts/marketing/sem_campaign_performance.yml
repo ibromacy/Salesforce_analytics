@@ -1,0 +1,60 @@
+semantic_models:
+  - name: campaign_performance
+    defaults:
+      agg_time_dimension: start_date
+    description: Campaign effectiveness - one row per campaign
+    model: ref('fct_campaign_performance')
+
+    entities:
+      - name: campaign
+        type: primary
+        expr: campaign_id
+      - name: owner
+        type: foreign
+        expr: owner_id
+
+    dimensions:
+      - name: start_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: end_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: campaign_name
+        type: categorical
+      - name: campaign_type
+        type: categorical
+      - name: status
+        type: categorical
+
+    measures:
+      - name: total_campaigns
+        description: Total number of campaigns
+        agg: count
+        expr: campaign_id
+      - name: total_campaign_spend
+        description: Total actual campaign cost
+        agg: sum
+        expr: actual_cost
+      - name: total_budgeted_cost
+        description: Total budgeted campaign cost
+        agg: sum
+        expr: budgeted_cost
+      - name: total_campaign_members
+        description: Total members across campaigns
+        agg: sum
+        expr: total_members
+      - name: total_campaign_responded
+        description: Total members who responded
+        agg: sum
+        expr: total_responded
+      - name: campaign_won_revenue
+        description: Revenue from won opportunities attributed to campaigns
+        agg: sum
+        expr: amount_won_opportunities
+      - name: campaign_all_revenue
+        description: Revenue from all opportunities attributed to campaigns
+        agg: sum
+        expr: amount_all_opportunities
