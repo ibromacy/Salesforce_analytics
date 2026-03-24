@@ -60,22 +60,22 @@ semantic_models:
         agg: count
         expr: account_id
         filter:
-          - "{{ Dimension('account__health_status') }} = 'Churning'"
+          - "health_status = 'Churning'"
       - name: at_risk_accounts
         description: Number of accounts classified as at risk
         agg: count
         expr: account_id
         filter:
-          - "{{ Dimension('account__health_status') }} = 'At Risk'"
+          - "health_status = 'At Risk'"
       - name: healthy_accounts
         description: Number of accounts classified as healthy
         agg: count
         expr: account_id
         filter:
-          - "{{ Dimension('account__health_status') }} = 'Healthy'"
+          - "health_status = 'Healthy'"
       - name: revenue_at_risk
         description: Lifetime revenue from churning and at-risk accounts
         agg: sum
         expr: lifetime_revenue
         filter:
-          - "{{ Dimension('account__health_status') }} in ('Churning', 'At Risk')"
+          - "health_status in ('Churning', 'At Risk')"
