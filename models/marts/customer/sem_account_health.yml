@@ -55,27 +55,3 @@ semantic_models:
         description: Average days since last won deal
         agg: average
         expr: days_since_last_won_deal
-      - name: churning_accounts
-        description: Number of accounts classified as churning
-        agg: count
-        expr: account_id
-        filter:
-          - "health_status = 'Churning'"
-      - name: at_risk_accounts
-        description: Number of accounts classified as at risk
-        agg: count
-        expr: account_id
-        filter:
-          - "health_status = 'At Risk'"
-      - name: healthy_accounts
-        description: Number of accounts classified as healthy
-        agg: count
-        expr: account_id
-        filter:
-          - "health_status = 'Healthy'"
-      - name: revenue_at_risk
-        description: Lifetime revenue from churning and at-risk accounts
-        agg: sum
-        expr: lifetime_revenue
-        filter:
-          - "health_status in ('Churning', 'At Risk')"
