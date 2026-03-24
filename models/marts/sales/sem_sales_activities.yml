@@ -1,0 +1,57 @@
+semantic_models:
+  - name: sales_activities
+    defaults:
+      agg_time_dimension: created_at
+    description: Sales activity tracking - one row per task
+    model: ref('fct_sales_activities')
+
+    entities:
+      - name: task
+        type: primary
+        expr: task_id
+      - name: owner
+        type: foreign
+        expr: owner_id
+      - name: account
+        type: foreign
+        expr: account_id
+
+    dimensions:
+      - name: created_at
+        type: time
+        type_params:
+          time_granularity: day
+      - name: activity_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: status
+        type: categorical
+      - name: priority
+        type: categorical
+      - name: task_subtype
+        type: categorical
+      - name: call_type
+        type: categorical
+      - name: is_closed
+        type: categorical
+      - name: is_high_priority
+        type: categorical
+
+    measures:
+      - name: total_activities
+        description: Total number of activities
+        agg: count
+        expr: task_id
+      - name: completed_activities
+        description: Number of completed activities
+        agg: sum_boolean
+        expr: is_closed
+      - name: total_call_duration_seconds
+        description: Total call duration in seconds
+        agg: sum
+        expr: call_duration_seconds
+      - name: avg_call_duration_minutes
+        description: Average call duration in minutes
+        agg: average
+        expr: call_duration_minutes

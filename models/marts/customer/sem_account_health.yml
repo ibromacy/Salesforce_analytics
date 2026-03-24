@@ -1,0 +1,81 @@
+semantic_models:
+  - name: account_health
+    defaults:
+      agg_time_dimension: first_won_date
+    description: Customer health and retention signals - one row per account
+    model: ref('fct_account_health')
+
+    entities:
+      - name: account
+        type: primary
+        expr: account_id
+
+    dimensions:
+      - name: first_won_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: last_won_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: account_name
+        type: categorical
+      - name: account_type
+        type: categorical
+      - name: industry
+        type: categorical
+      - name: customer_priority
+        type: categorical
+      - name: sla
+        type: categorical
+      - name: health_status
+        type: categorical
+      - name: upsell_status
+        type: categorical
+
+    measures:
+      - name: total_accounts
+        description: Total number of accounts
+        agg: count
+        expr: account_id
+      - name: total_lifetime_revenue
+        description: Total lifetime revenue across accounts
+        agg: sum
+        expr: lifetime_revenue
+      - name: avg_lifetime_revenue
+        description: Average lifetime revenue per account
+        agg: average
+        expr: lifetime_revenue
+      - name: total_open_pipeline
+        description: Total open pipeline across accounts
+        agg: sum
+        expr: open_pipeline_value
+      - name: avg_days_since_last_deal
+        description: Average days since last won deal
+        agg: average
+        expr: days_since_last_won_deal
+      - name: churning_accounts
+        description: Number of accounts classified as churning
+        agg: count
+        expr: account_id
+        filter:
+          - "{{ Dimension('account__health_status') }} = 'Churning'"
+      - name: at_risk_accounts
+        description: Number of accounts classified as at risk
+        agg: count
+        expr: account_id
+        filter:
+          - "{{ Dimension('account__health_status') }} = 'At Risk'"
+      - name: healthy_accounts
+        description: Number of accounts classified as healthy
+        agg: count
+        expr: account_id
+        filter:
+          - "{{ Dimension('account__health_status') }} = 'Healthy'"
+      - name: revenue_at_risk
+        description: Lifetime revenue from churning and at-risk accounts
+        agg: sum
+        expr: lifetime_revenue
+        filter:
+          - "{{ Dimension('account__health_status') }} in ('Churning', 'At Risk')"

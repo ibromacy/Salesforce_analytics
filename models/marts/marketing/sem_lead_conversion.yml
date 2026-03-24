@@ -1,0 +1,54 @@
+semantic_models:
+  - name: lead_conversions
+    defaults:
+      agg_time_dimension: lead_created_at
+    description: Lead conversion funnel - one row per lead
+    model: ref('fct_lead_conversion')
+
+    entities:
+      - name: lead
+        type: primary
+        expr: lead_id
+      - name: owner
+        type: foreign
+        expr: owner_id
+
+    dimensions:
+      - name: lead_created_at
+        type: time
+        type_params:
+          time_granularity: day
+      - name: converted_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: lead_source
+        type: categorical
+      - name: industry
+        type: categorical
+      - name: rating
+        type: categorical
+      - name: status
+        type: categorical
+      - name: is_converted
+        type: categorical
+      - name: country
+        type: categorical
+
+    measures:
+      - name: total_leads
+        description: Total number of leads
+        agg: count
+        expr: lead_id
+      - name: converted_leads
+        description: Number of converted leads
+        agg: sum_boolean
+        expr: is_converted
+      - name: converted_opportunity_amount
+        description: Total revenue from converted lead opportunities
+        agg: sum
+        expr: converted_opportunity_amount
+      - name: avg_days_to_convert
+        description: Average days from lead creation to conversion
+        agg: average
+        expr: days_to_convert

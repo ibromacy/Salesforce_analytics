@@ -1,0 +1,87 @@
+semantic_models:
+  - name: opportunities
+    defaults:
+      agg_time_dimension: created_at
+    description: Core sales pipeline fact - one row per opportunity
+    model: ref('fct_opportunities')
+
+    entities:
+      - name: opportunity
+        type: primary
+        expr: opportunity_id
+      - name: account
+        type: foreign
+        expr: account_id
+      - name: owner
+        type: foreign
+        expr: owner_id
+
+    dimensions:
+      - name: created_at
+        type: time
+        type_params:
+          time_granularity: day
+      - name: close_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: deal_status
+        type: categorical
+      - name: stage_name
+        type: categorical
+      - name: opportunity_type
+        type: categorical
+      - name: lead_source
+        type: categorical
+      - name: forecast_category_name
+        type: categorical
+      - name: is_won
+        type: categorical
+      - name: is_closed
+        type: categorical
+      - name: fiscal_year
+        type: categorical
+      - name: fiscal_quarter
+        type: categorical
+
+    measures:
+      - name: total_amount
+        description: Total deal amount across all opportunities
+        agg: sum
+        expr: amount
+      - name: won_revenue
+        description: Revenue from won deals only
+        agg: sum
+        expr: won_revenue
+      - name: lost_revenue
+        description: Revenue from lost deals only
+        agg: sum
+        expr: lost_revenue
+      - name: open_pipeline_value
+        description: Value of deals still in pipeline
+        agg: sum
+        expr: open_pipeline_value
+      - name: opportunity_count
+        description: Total number of opportunities
+        agg: count
+        expr: opportunity_id
+      - name: won_deal_count
+        description: Number of won deals
+        agg: sum_boolean
+        expr: is_won
+      - name: closed_deal_count
+        description: Number of closed deals (won + lost)
+        agg: sum_boolean
+        expr: is_closed
+      - name: avg_deal_size
+        description: Average deal amount
+        agg: average
+        expr: amount
+      - name: avg_days_to_close
+        description: Average days from creation to close
+        agg: average
+        expr: days_to_close
+      - name: max_amount
+        description: Largest deal amount
+        agg: max
+        expr: amount
