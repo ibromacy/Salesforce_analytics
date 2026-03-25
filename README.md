@@ -61,7 +61,7 @@ Won revenue is tracked separately from lost and open pipeline throughout the mod
 This project deliberately uses BigQuery to demonstrate platform versatility alongside a separate Snowflake-based project (Auto_project). BigQuery's serverless model eliminates warehouse sizing decisions — queries are billed per TB scanned, not per compute-second. For a CRM analytics use case with relatively small data volumes, this is more cost-effective than maintaining even an X-Small Snowflake warehouse.
 
 ### Why Airbyte for Ingestion (not custom Python)
-The previous project (Auto_project) used Snowpipe + Streams + Tasks for ingestion and CDC. For a CRM source like Salesforce, Airbyte is the better architectural choice because Salesforce's API is well-defined and Airbyte's connector handles authentication, pagination, rate limiting, schema detection, and incremental sync natively.
+For a CRM source like Salesforce, Airbyte is the better architectural choice because Salesforce's API is well-defined and Airbyte's connector handles authentication, pagination, rate limiting, schema detection, and incremental sync natively.
 
 ### Why CDC Lives in Airbyte, Not dbt
 Airbyte handles CDC at the ingestion layer using Salesforce's SystemModstamp field. This means dbt staging models don't need incremental logic — they are materialised as views that clean and rename columns on top of already-deduplicated raw tables.
